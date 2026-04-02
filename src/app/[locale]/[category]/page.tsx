@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import VideoCard from '@/components/public/VideoCard'
 import type { Metadata } from 'next'
 import { routing } from '@/i18n/routing'
@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CategoryPage({ params }: Props) {
   const { locale, category: categorySlug } = await params
+  setRequestLocale(locale)
   const t = await getTranslations('category')
 
   const category = await prisma.category.findUnique({

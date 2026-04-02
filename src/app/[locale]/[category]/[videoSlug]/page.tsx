@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import VideoEmbed from '@/components/public/VideoEmbed'
 import Link from 'next/link'
 import { getYouTubeThumbnailUrl } from '@/lib/youtube'
@@ -61,6 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function VideoPage({ params }: Props) {
   const { locale, category: categorySlug, videoSlug } = await params
+  setRequestLocale(locale)
   const t = await getTranslations('video')
 
   const video = await prisma.video.findUnique({
