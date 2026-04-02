@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "home": "Home",
+    "categories": "Categories"
+  },
+  "home": {
+    "hero_title": "Glen's Tech Corner",
+    "hero_subtitle": "Simple tutorials for powerful tools",
+    "browse_categories": "Browse Categories",
+    "latest_videos": "Latest Videos"
+  },
+  "category": {
+    "videos_count": "{count} videos",
+    "no_videos": "No videos yet. Check back soon!"
+  },
+  "video": {
+    "watch_on_youtube": "Watch on YouTube",
+    "published": "Published",
+    "back_to": "Back to {category}"
+  },
+  "footer": {
+    "tagline": "Simple tutorials for Figma, Sheets, Claude & more.",
+    "copyright": "© {year} Glen's Tech Corner"
+  },
+  "admin": {
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "categories": "Categories",
+    "videos": "Videos",
+    "new_category": "New Category",
+    "new_video": "New Video",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "published": "Published",
+    "draft": "Draft",
+    "translations": "Translations",
+    "email": "Email",
+    "password": "Password",
+    "sign_in": "Sign in to Admin"
+  }
+}

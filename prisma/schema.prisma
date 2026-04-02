@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── Content Models ───────────────────────────────────────────────────────────
+
+model Category {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  icon        String?
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  translations CategoryTranslation[]
+  videos       Video[]
+}
+
+model CategoryTranslation {
+  id          String  @id @default(cuid())
+  locale      String
+  name        String
+  description String?
+  metaTitle   String?
+  metaDesc    String?
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, locale])
+}
+
+model Video {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  youtubeId    String
+  thumbnailUrl String?
+  publishedAt  DateTime
+  isPublished  Boolean  @default(false)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  translations VideoTranslation[]
+}
+
+model VideoTranslation {
+  id           String  @id @default(cuid())
+  locale       String
+  title        String
+  subtitle     String?
+  description  String
+  metaTitle    String?
+  metaDesc     String?
+  metaKeywords String?
+
+  videoId String
+  video   Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@unique([videoId, locale])
+}
+
+// ─── Auth Models ──────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

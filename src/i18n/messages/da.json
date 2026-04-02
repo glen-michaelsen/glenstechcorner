@@ -1,0 +1,44 @@
+{
+  "nav": {
+    "home": "Hjem",
+    "categories": "Kategorier"
+  },
+  "home": {
+    "hero_title": "Glen's Tech Corner",
+    "hero_subtitle": "Enkle tutorials til kraftfulde værktøjer",
+    "browse_categories": "Gennemse kategorier",
+    "latest_videos": "Seneste videoer"
+  },
+  "category": {
+    "videos_count": "{count} videoer",
+    "no_videos": "Ingen videoer endnu. Kig forbi snart!"
+  },
+  "video": {
+    "watch_on_youtube": "Se på YouTube",
+    "published": "Udgivet",
+    "back_to": "Tilbage til {category}"
+  },
+  "footer": {
+    "tagline": "Enkle tutorials til Figma, Sheets, Claude og meget mere.",
+    "copyright": "© {year} Glen's Tech Corner"
+  },
+  "admin": {
+    "login": "Log ind",
+    "logout": "Log ud",
+    "dashboard": "Dashboard",
+    "categories": "Kategorier",
+    "videos": "Videoer",
+    "new_category": "Ny kategori",
+    "new_video": "Ny video",
+    "save": "Gem",
+    "cancel": "Annuller",
+    "delete": "Slet",
+    "edit": "Rediger",
+    "published": "Udgivet",
+    "draft": "Kladde",
+    "translations": "Oversættelser",
+    "email": "E-mail",
+    "password": "Adgangskode",
+    "sign_in": "Log ind på admin"
+  }
+}
