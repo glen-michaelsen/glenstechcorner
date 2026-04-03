@@ -26,6 +26,24 @@ async function main() {
     },
   })
 
+  // Languages
+  const languages = [
+    { code: 'en', name: 'English', isDefault: true },
+    { code: 'da', name: 'Dansk' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'fr', name: 'Français' },
+    { code: 'es', name: 'Español' },
+    { code: 'sv', name: 'Svenska' },
+    { code: 'no', name: 'Norsk' },
+  ]
+  for (const lang of languages) {
+    await prisma.language.upsert({
+      where: { code: lang.code },
+      update: { name: lang.name },
+      create: { code: lang.code, name: lang.name, isDefault: lang.isDefault ?? false, isActive: lang.code === 'en' || lang.code === 'da' },
+    })
+  }
+
   // Categories
   const categories = [
     {

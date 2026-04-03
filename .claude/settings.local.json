@@ -4,7 +4,26 @@
       "Bash(npm info:*)",
       "Bash(npx create-next-app@latest . --typescript --tailwind --app --src-dir --import-alias \"@/*\" --yes)",
       "Bash(npm install:*)",
-      "Bash(npx shadcn@latest init --defaults)"
+      "Bash(npx shadcn@latest init --defaults)",
+      "Bash(npx shadcn@latest add card badge separator table tabs select textarea switch toast dialog input label form)",
+      "Bash(npx shadcn@latest add card badge separator table tabs select textarea switch sonner dialog input label form)",
+      "Bash(npx shadcn@latest add form)",
+      "Bash(npx prisma:*)",
+      "Bash(mkdir -p \"/Users/glenmichaelsen/Documents/Visual Studio/glenstechcorner.com/src/app/admin/categories/[id]\")",
+      "Bash(mkdir -p \"/Users/glenmichaelsen/Documents/Visual Studio/glenstechcorner.com/src/app/admin/videos/[id]\")",
+      "Bash(mkdir -p \"/Users/glenmichaelsen/Documents/Visual Studio/glenstechcorner.com/src/app/api/admin/categories/[id]\")",
+      "Bash(mkdir -p \"/Users/glenmichaelsen/Documents/Visual Studio/glenstechcorner.com/src/app/api/admin/videos/[id]\")",
+      "Bash(node -e \"import\\(''dotenv/config''\\).then\\(\\(\\) => console.log\\(''DB:'', process.env.DATABASE_URL\\)\\)\")",
+      "Bash(npm run:*)",
+      "WebFetch(domain:localhost)",
+      "Bash(pkill -f \"next dev\")",
+      "mcp__Claude_Preview__preview_start",
+      "Read(//usr/local/bin/**)",
+      "Read(//opt/homebrew/lib/node_modules/npm/bin/**)",
+      "Read(//Users/glenmichaelsen/.nvm/versions/**)",
+      "Read(//opt/homebrew/Cellar/node/25.8.2/bin/**)",
+      "Read(//opt/homebrew/**)",
+      "Bash(chmod +x \"/Users/glenmichaelsen/Documents/Visual Studio/glenstechcorner.com/.claude/start-dev.sh\")"
     ]
   }
 }
