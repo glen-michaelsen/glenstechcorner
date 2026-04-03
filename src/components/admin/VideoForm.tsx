@@ -31,7 +31,13 @@ interface TranslationData {
   metaKeywords: string
 }
 
+interface Language {
+  code: string
+  name: string
+}
+
 interface VideoFormProps {
+  languages: Language[]
   categories: Category[]
   initialData?: {
     id: string
@@ -53,9 +59,7 @@ interface VideoFormProps {
   }
 }
 
-const LOCALES = ['en', 'da']
-
-export function VideoForm({ categories, initialData }: VideoFormProps) {
+export function VideoForm({ languages, categories, initialData }: VideoFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [slug, setSlug] = useState(initialData?.slug ?? '')
@@ -70,12 +74,12 @@ export function VideoForm({ categories, initialData }: VideoFormProps) {
   const [categoryId, setCategoryId] = useState(initialData?.categoryId ?? '')
   const [translations, setTranslations] = useState<Record<string, TranslationData>>(
     Object.fromEntries(
-      LOCALES.map((locale) => {
-        const existing = initialData?.translations.find((t) => t.locale === locale)
+      languages.map((lang) => {
+        const existing = initialData?.translations.find((t) => t.locale === lang.code)
         return [
-          locale,
+          lang.code,
           {
-            locale,
+            locale: lang.code,
             title: existing?.title ?? '',
             subtitle: existing?.subtitle ?? '',
             description: existing?.description ?? '',
@@ -190,61 +194,64 @@ export function VideoForm({ categories, initialData }: VideoFormProps) {
         <h3 className="font-medium text-slate-900 mb-3">Translations</h3>
         <Tabs defaultValue="en">
           <TabsList>
-            {LOCALES.map((loc) => (
-              <TabsTrigger key={loc} value={loc}>
-                {loc.toUpperCase()}
+            {languages.map((lang) => (
+              <TabsTrigger key={lang.code} value={lang.code}>
+                {lang.code.toUpperCase()}
               </TabsTrigger>
             ))}
           </TabsList>
-          {LOCALES.map((loc) => (
-            <TabsContent key={loc} value={loc} className="space-y-4 mt-4">
-              <div>
-                <Label>Title</Label>
-                <Input
-                  value={translations[loc].title}
-                  onChange={(e) => updateTranslation(loc, 'title', e.target.value)}
-                  placeholder={`Video title in ${loc}`}
-                />
-              </div>
-              <div>
-                <Label>Subtitle</Label>
-                <Input
-                  value={translations[loc].subtitle}
-                  onChange={(e) => updateTranslation(loc, 'subtitle', e.target.value)}
-                />
-              </div>
-              <div>
-                <Label>Description</Label>
-                <Textarea
-                  value={translations[loc].description}
-                  onChange={(e) => updateTranslation(loc, 'description', e.target.value)}
-                  rows={6}
-                />
-              </div>
-              <div>
-                <Label>Meta Title (SEO override)</Label>
-                <Input
-                  value={translations[loc].metaTitle}
-                  onChange={(e) => updateTranslation(loc, 'metaTitle', e.target.value)}
-                />
-              </div>
-              <div>
-                <Label>Meta Description (SEO override, max 160 chars)</Label>
-                <Textarea
-                  value={translations[loc].metaDesc}
-                  onChange={(e) => updateTranslation(loc, 'metaDesc', e.target.value)}
-                  rows={2}
-                />
-              </div>
-              <div>
-                <Label>Meta Keywords (comma separated)</Label>
-                <Input
-                  value={translations[loc].metaKeywords}
-                  onChange={(e) => updateTranslation(loc, 'metaKeywords', e.target.value)}
-                />
-              </div>
-            </TabsContent>
-          ))}
+          {languages.map((lang) => {
+            const loc = lang.code
+            return (
+              <TabsContent key={loc} value={loc} className="space-y-4 mt-4">
+                <div>
+                  <Label>Title</Label>
+                  <Input
+                    value={translations[loc]?.title ?? ''}
+                    onChange={(e) => updateTranslation(loc, 'title', e.target.value)}
+                    placeholder={`Video title in ${lang.name}`}
+                  />
+                </div>
+                <div>
+                  <Label>Subtitle</Label>
+                  <Input
+                    value={translations[loc]?.subtitle ?? ''}
+                    onChange={(e) => updateTranslation(loc, 'subtitle', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Description</Label>
+                  <Textarea
+                    value={translations[loc]?.description ?? ''}
+                    onChange={(e) => updateTranslation(loc, 'description', e.target.value)}
+                    rows={6}
+                  />
+                </div>
+                <div>
+                  <Label>Meta Title (SEO override)</Label>
+                  <Input
+                    value={translations[loc]?.metaTitle ?? ''}
+                    onChange={(e) => updateTranslation(loc, 'metaTitle', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Meta Description (SEO override, max 160 chars)</Label>
+                  <Textarea
+                    value={translations[loc]?.metaDesc ?? ''}
+                    onChange={(e) => updateTranslation(loc, 'metaDesc', e.target.value)}
+                    rows={2}
+                  />
+                </div>
+                <div>
+                  <Label>Meta Keywords (comma separated)</Label>
+                  <Input
+                    value={translations[loc]?.metaKeywords ?? ''}
+                    onChange={(e) => updateTranslation(loc, 'metaKeywords', e.target.value)}
+                  />
+                </div>
+              </TabsContent>
+            )
+          })}
         </Tabs>
       </div>
 

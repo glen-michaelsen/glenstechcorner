@@ -8,7 +8,7 @@ export default async function EditVideoPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const [video, categories] = await Promise.all([
+  const [video, categories, languages] = await Promise.all([
     prisma.video.findUnique({
       where: { id },
       include: { translations: true },
@@ -17,6 +17,7 @@ export default async function EditVideoPage({
       orderBy: { sortOrder: 'asc' },
       include: { translations: { where: { locale: 'en' } } },
     }),
+    prisma.language.findMany({ where: { isActive: true }, orderBy: { code: 'asc' } }),
   ])
   if (!video) notFound()
 
@@ -30,6 +31,7 @@ export default async function EditVideoPage({
     <div>
       <h1 className="text-2xl font-bold mb-6">Edit Video</h1>
       <VideoForm
+        languages={languages}
         categories={cats}
         initialData={{
           ...video,

@@ -16,7 +16,13 @@ interface TranslationData {
   metaDesc: string
 }
 
+interface Language {
+  code: string
+  name: string
+}
+
 interface CategoryFormProps {
+  languages: Language[]
   initialData?: {
     id: string
     slug: string
@@ -33,9 +39,7 @@ interface CategoryFormProps {
   }
 }
 
-const LOCALES = ['en', 'da']
-
-export function CategoryForm({ initialData }: CategoryFormProps) {
+export function CategoryForm({ languages, initialData }: CategoryFormProps) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [slug, setSlug] = useState(initialData?.slug ?? '')
@@ -44,12 +48,12 @@ export function CategoryForm({ initialData }: CategoryFormProps) {
   const [isPublished, setIsPublished] = useState(initialData?.isPublished ?? false)
   const [translations, setTranslations] = useState<Record<string, TranslationData>>(
     Object.fromEntries(
-      LOCALES.map((locale) => {
-        const existing = initialData?.translations.find((t) => t.locale === locale)
+      languages.map((lang) => {
+        const existing = initialData?.translations.find((t) => t.locale === lang.code)
         return [
-          locale,
+          lang.code,
           {
-            locale,
+            locale: lang.code,
             name: existing?.name ?? '',
             description: existing?.description ?? '',
             metaTitle: existing?.metaTitle ?? '',
@@ -136,47 +140,50 @@ export function CategoryForm({ initialData }: CategoryFormProps) {
         <h3 className="font-medium text-slate-900 mb-3">Translations</h3>
         <Tabs defaultValue="en">
           <TabsList>
-            {LOCALES.map((loc) => (
-              <TabsTrigger key={loc} value={loc}>
-                {loc.toUpperCase()}
+            {languages.map((lang) => (
+              <TabsTrigger key={lang.code} value={lang.code}>
+                {lang.code.toUpperCase()}
               </TabsTrigger>
             ))}
           </TabsList>
-          {LOCALES.map((loc) => (
-            <TabsContent key={loc} value={loc} className="space-y-4 mt-4">
-              <div>
-                <Label>Name</Label>
-                <Input
-                  value={translations[loc].name}
-                  onChange={(e) => updateTranslation(loc, 'name', e.target.value)}
-                  placeholder={`Category name in ${loc}`}
-                />
-              </div>
-              <div>
-                <Label>Description</Label>
-                <Textarea
-                  value={translations[loc].description}
-                  onChange={(e) => updateTranslation(loc, 'description', e.target.value)}
-                  rows={3}
-                />
-              </div>
-              <div>
-                <Label>Meta Title (SEO override)</Label>
-                <Input
-                  value={translations[loc].metaTitle}
-                  onChange={(e) => updateTranslation(loc, 'metaTitle', e.target.value)}
-                />
-              </div>
-              <div>
-                <Label>Meta Description (SEO override)</Label>
-                <Textarea
-                  value={translations[loc].metaDesc}
-                  onChange={(e) => updateTranslation(loc, 'metaDesc', e.target.value)}
-                  rows={2}
-                />
-              </div>
-            </TabsContent>
-          ))}
+          {languages.map((lang) => {
+            const loc = lang.code
+            return (
+              <TabsContent key={loc} value={loc} className="space-y-4 mt-4">
+                <div>
+                  <Label>Name</Label>
+                  <Input
+                    value={translations[loc]?.name ?? ''}
+                    onChange={(e) => updateTranslation(loc, 'name', e.target.value)}
+                    placeholder={`Category name in ${lang.name}`}
+                  />
+                </div>
+                <div>
+                  <Label>Description</Label>
+                  <Textarea
+                    value={translations[loc]?.description ?? ''}
+                    onChange={(e) => updateTranslation(loc, 'description', e.target.value)}
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label>Meta Title (SEO override)</Label>
+                  <Input
+                    value={translations[loc]?.metaTitle ?? ''}
+                    onChange={(e) => updateTranslation(loc, 'metaTitle', e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>Meta Description (SEO override)</Label>
+                  <Textarea
+                    value={translations[loc]?.metaDesc ?? ''}
+                    onChange={(e) => updateTranslation(loc, 'metaDesc', e.target.value)}
+                    rows={2}
+                  />
+                </div>
+              </TabsContent>
+            )
+          })}
         </Tabs>
       </div>
 

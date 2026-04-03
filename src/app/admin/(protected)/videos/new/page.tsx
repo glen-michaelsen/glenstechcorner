@@ -2,10 +2,13 @@ import { prisma } from '@/lib/prisma'
 import { VideoForm } from '@/components/admin/VideoForm'
 
 export default async function NewVideoPage() {
-  const categories = await prisma.category.findMany({
-    orderBy: { sortOrder: 'asc' },
-    include: { translations: { where: { locale: 'en' } } },
-  })
+  const [categories, languages] = await Promise.all([
+    prisma.category.findMany({
+      orderBy: { sortOrder: 'asc' },
+      include: { translations: { where: { locale: 'en' } } },
+    }),
+    prisma.language.findMany({ where: { isActive: true }, orderBy: { code: 'asc' } }),
+  ])
   const cats = categories.map((c) => ({
     id: c.id,
     slug: c.slug,
@@ -15,7 +18,7 @@ export default async function NewVideoPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">New Video</h1>
-      <VideoForm categories={cats} />
+      <VideoForm languages={languages} categories={cats} />
     </div>
   )
 }
