@@ -125,7 +125,7 @@ export default async function VideoPage({ params }: Props) {
 
         {/* Video */}
         <div className="rounded-2xl overflow-hidden shadow-2xl">
-          <VideoEmbed youtubeId={video.youtubeId} />
+          <VideoEmbed youtubeId={video.youtubeId} title={translation.title} />
         </div>
 
         {/* Description */}
