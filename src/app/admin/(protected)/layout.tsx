@@ -16,9 +16,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
         <nav className="flex-1 p-3 space-y-1">
           {[
+            { href: '/admin', label: 'Dashboard' },
             { href: '/admin/categories', label: 'Categories' },
             { href: '/admin/videos', label: 'Videos' },
             { href: '/admin/languages', label: 'Languages' },
+            { href: '/admin/translations', label: 'Translations' },
+            { href: '/admin/users', label: 'Users' },
           ].map((item) => (
             <Link
               key={item.href}
@@ -33,7 +36,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <SignOutButton />
         </div>
       </aside>
-      <main className="flex-1 p-8 overflow-auto">{children}</main>
+      <main className="flex-1 p-12 overflow-auto">{children}</main>
     </div>
   )
 }

@@ -80,6 +80,18 @@ model Language {
   updatedAt DateTime @updatedAt
 }
 
+model UITranslation {
+  id        String   @id @default(cuid())
+  locale    String
+  namespace String
+  key       String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([locale, namespace, key])
+}
+
 model User {
   id           String   @id @default(cuid())
   email        String   @unique

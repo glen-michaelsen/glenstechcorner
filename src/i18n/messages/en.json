@@ -20,7 +20,9 @@
   },
   "footer": {
     "tagline": "Simple tutorials for Figma, Sheets, Claude & more.",
-    "copyright": "© {year} Glen's Tech Corner"
+    "copyright": "© {year} Glen's Tech Corner",
+    "top_categories": "Top Categories",
+    "latest_videos": "Latest Videos"
   },
   "admin": {
     "login": "Login",

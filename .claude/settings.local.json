@@ -23,7 +23,11 @@
       "Read(//Users/glenmichaelsen/.nvm/versions/**)",
       "Read(//opt/homebrew/Cellar/node/25.8.2/bin/**)",
       "Read(//opt/homebrew/**)",
-      "Bash(chmod +x \"/Users/glenmichaelsen/Documents/Visual Studio/glenstechcorner.com/.claude/start-dev.sh\")"
+      "Bash(chmod +x \"/Users/glenmichaelsen/Documents/Visual Studio/glenstechcorner.com/.claude/start-dev.sh\")",
+      "Bash(cp \"/Users/glenmichaelsen/Desktop/glens-tech-corner-fav.png\" \"/Users/glenmichaelsen/Documents/Visual Studio/glenstechcorner.com/public/icon.png\")",
+      "Bash(cp \"/Users/glenmichaelsen/Downloads/glens-tech-corner-fav.png\" \"/Users/glenmichaelsen/Documents/Visual Studio/glenstechcorner.com/public/icon.png\")",
+      "Bash(/opt/homebrew/bin/npm install:*)",
+      "Bash(ls ~/.nvm/versions/node/*/bin/node)"
     ]
   }
 }
