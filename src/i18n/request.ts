@@ -9,11 +9,12 @@ export default getRequestConfig(async ({ requestLocale }) => {
   }
 
   // Load base messages from JSON file, fall back to English
+  // Deep clone to avoid mutating the cached module object across requests
   let messages: Record<string, Record<string, string>>
   try {
-    messages = (await import(`./messages/${locale}.json`)).default
+    messages = JSON.parse(JSON.stringify((await import(`./messages/${locale}.json`)).default))
   } catch {
-    messages = (await import(`./messages/en.json`)).default
+    messages = JSON.parse(JSON.stringify((await import(`./messages/en.json`)).default))
   }
 
   // Fetch DB overrides and merge on top
