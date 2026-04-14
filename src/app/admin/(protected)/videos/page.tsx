@@ -4,6 +4,19 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { revalidatePath } from 'next/cache'
 
+const VIDEO_FIELDS = ['title', 'subtitle', 'description', 'metaTitle', 'metaDesc', 'metaKeywords'] as const
+type VT = { title: string; subtitle: string | null; description: string; metaTitle: string | null; metaDesc: string | null; metaKeywords: string | null }
+
+function videoTranslationStatus(defaultT: VT | undefined, targetT: VT | undefined): 'full' | 'partial' | 'none' {
+  if (!targetT) return 'none'
+  if (!defaultT) return 'full'
+  const needed = VIDEO_FIELDS.filter((f) => !!defaultT[f])
+  const done = needed.filter((f) => !!targetT[f])
+  if (done.length === needed.length) return 'full'
+  if (done.length > 0) return 'partial'
+  return 'none'
+}
+
 async function deleteVideo(formData: FormData) {
   'use server'
   const id = formData.get('id') as string
@@ -12,13 +25,18 @@ async function deleteVideo(formData: FormData) {
 }
 
 export default async function VideosPage() {
-  const videos = await prisma.video.findMany({
-    orderBy: { publishedAt: 'desc' },
-    include: {
-      translations: true,
-      category: { include: { translations: { where: { locale: 'en' } } } },
-    },
-  })
+  const [videos, activeLanguages] = await Promise.all([
+    prisma.video.findMany({
+      orderBy: { publishedAt: 'desc' },
+      include: {
+        translations: true,
+        category: { include: { translations: { where: { locale: 'en' } } } },
+      },
+    }),
+    prisma.language.findMany({ where: { isActive: true } }),
+  ])
+
+  const defaultCode = activeLanguages.find((l) => l.isDefault)?.code ?? 'en'
 
   return (
     <div>
@@ -44,9 +62,8 @@ export default async function VideosPage() {
           <tbody>
             {videos.map((video) => {
               const enT = video.translations.find((t) => t.locale === 'en')
-              const catName =
-                video.category.translations[0]?.name ?? video.category.slug
-              const locales = video.translations.map((t) => t.locale.toUpperCase())
+              const defaultT = video.translations.find((t) => t.locale === defaultCode)
+              const catName = video.category.translations[0]?.name ?? video.category.slug
               return (
                 <tr key={video.id} className="border-b last:border-0 hover:bg-slate-50">
                   <td className="px-4 py-3">
@@ -64,12 +81,28 @@ export default async function VideosPage() {
                     </Badge>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-1">
-                      {locales.map((l) => (
-                        <Badge key={l} variant="outline" className="text-xs">
-                          {l}
-                        </Badge>
-                      ))}
+                    <div className="flex gap-1 flex-wrap">
+                      {activeLanguages.map((lang) => {
+                        const t = video.translations.find((tr) => tr.locale === lang.code)
+                        let style: React.CSSProperties | undefined
+                        if (lang.isDefault) {
+                          style = t ? { background: '#DCFCE7', color: '#166534' } : undefined
+                        } else {
+                          const status = videoTranslationStatus(defaultT, t)
+                          if (status === 'full') style = { background: '#DCFCE7', color: '#166534' }
+                          else if (status === 'partial') style = { background: '#FEF9C3', color: '#854D0E' }
+                        }
+                        return (
+                          <Badge
+                            key={lang.code}
+                            variant="outline"
+                            className="text-xs border-0"
+                            style={style}
+                          >
+                            {lang.code.toUpperCase()}
+                          </Badge>
+                        )
+                      })}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">

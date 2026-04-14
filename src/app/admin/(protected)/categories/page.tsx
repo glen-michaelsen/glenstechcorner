@@ -4,6 +4,19 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { revalidatePath } from 'next/cache'
 
+const CAT_FIELDS = ['name', 'description', 'metaTitle', 'metaDesc'] as const
+type CT = { name: string; description: string | null; metaTitle: string | null; metaDesc: string | null }
+
+function catTranslationStatus(defaultT: CT | undefined, targetT: CT | undefined): 'full' | 'partial' | 'none' {
+  if (!targetT) return 'none'
+  if (!defaultT) return 'full'
+  const needed = CAT_FIELDS.filter((f) => !!defaultT[f])
+  const done = needed.filter((f) => !!targetT[f])
+  if (done.length === needed.length) return 'full'
+  if (done.length > 0) return 'partial'
+  return 'none'
+}
+
 async function deleteCategory(formData: FormData) {
   'use server'
   const id = formData.get('id') as string
@@ -12,13 +25,18 @@ async function deleteCategory(formData: FormData) {
 }
 
 export default async function CategoriesPage() {
-  const categories = await prisma.category.findMany({
-    orderBy: { sortOrder: 'asc' },
-    include: {
-      translations: true,
-      _count: { select: { videos: true } },
-    },
-  })
+  const [categories, activeLanguages] = await Promise.all([
+    prisma.category.findMany({
+      orderBy: { sortOrder: 'asc' },
+      include: {
+        translations: true,
+        _count: { select: { videos: true } },
+      },
+    }),
+    prisma.language.findMany({ where: { isActive: true } }),
+  ])
+
+  const defaultCode = activeLanguages.find((l) => l.isDefault)?.code ?? 'en'
 
   return (
     <div>
@@ -45,7 +63,7 @@ export default async function CategoriesPage() {
           <tbody>
             {categories.map((cat) => {
               const enT = cat.translations.find((t) => t.locale === 'en')
-              const locales = cat.translations.map((t) => t.locale.toUpperCase())
+              const defaultT = cat.translations.find((t) => t.locale === defaultCode)
               return (
                 <tr key={cat.id} className="border-b last:border-0 hover:bg-slate-50">
                   <td className="px-4 py-3">{cat.icon ?? '—'}</td>
@@ -60,12 +78,28 @@ export default async function CategoriesPage() {
                     </Badge>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex gap-1">
-                      {locales.map((l) => (
-                        <Badge key={l} variant="outline" className="text-xs">
-                          {l}
-                        </Badge>
-                      ))}
+                    <div className="flex gap-1 flex-wrap">
+                      {activeLanguages.map((lang) => {
+                        const t = cat.translations.find((tr) => tr.locale === lang.code)
+                        let style: React.CSSProperties | undefined
+                        if (lang.isDefault) {
+                          style = t ? { background: '#DCFCE7', color: '#166534' } : undefined
+                        } else {
+                          const status = catTranslationStatus(defaultT, t)
+                          if (status === 'full') style = { background: '#DCFCE7', color: '#166534' }
+                          else if (status === 'partial') style = { background: '#FEF9C3', color: '#854D0E' }
+                        }
+                        return (
+                          <Badge
+                            key={lang.code}
+                            variant="outline"
+                            className="text-xs border-0"
+                            style={style}
+                          >
+                            {lang.code.toUpperCase()}
+                          </Badge>
+                        )
+                      })}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">
